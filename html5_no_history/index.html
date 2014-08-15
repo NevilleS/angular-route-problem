@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html ng-app="test">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Angular Route Problem</title>
+  <base href="/html5_no_history/">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/5.3.1/css/foundation.css" rel="stylesheet">
+</head>
+<body>
+  <div class="row">
+    <h1>Angular Route Demo</h1>
+    <div class="columns">
+      Select mode:
+      <div class="row collapse">
+        <a class="columns small-2 button small" href="/html5_history/">HTML5 + HISTORY</a>
+        <a class="columns small-2 button small secondary" href="/html5_no_history/">HTML5 + NO HISTORY</a>
+        <a class="columns small-2 end button small" href="/no_html5/">NO HTML5</a>
+      </div>
+      Current config:
+      <ul>
+        <li>base href: "/html5_no_history/"
+        <li>HTML5 Mode: enabled
+        <li>Hash Prefix: "!"
+        <li>History API: disabled (by $sniffer)
+      </ul>
+    </div>
+    <div class="row">
+      Try the following links to see the behaviour of $routeProvider and $location:
+      <div class="row collapse">
+        <a class="columns small-2 button" href="/html5_no_history/">base</a>
+        <a class="columns small-2 button" href="rel_path">relative path</a>
+        <a class="columns small-2 button" href="/html5_no_history/abs_path">absolute path</a>
+        <a class="columns small-2 button" href="/other_base">other base</a>
+        <a class="columns small-2 end button" href="http://www.example.com">absolute url</a>
+      </div>
+    </div>
+    <div class="row">
+      <b>Current path:</b> <em><span ng-view></span></em>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.18/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.18/angular-route.js"></script>
+  <script>
+  angular.module('test', ['ngRoute'])
+    .config(function($provide, $routeProvider, $locationProvider) {
+      $provide.decorator('$sniffer', function($delegate) {
+        $delegate.history = false;
+        return $delegate;
+      });
+      $locationProvider
+        .html5Mode(true)
+        .hashPrefix("!");
+      $routeProvider
+        .when('/', {
+          template: '/html5_no_history/'
+        })
+        .when('/rel_path', {
+          template: '/html5_no_history/rel_path'
+        })
+        .when('/abs_path', {
+          template: '/html5_no_history/abs_path'
+        })
+        .otherwise({
+          template: 'off the ranch! ($routeProvider.otherwise)'
+        });
+      });
+  </script>
+</body>
+</html>
